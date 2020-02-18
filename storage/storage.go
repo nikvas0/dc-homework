@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/jinzhu/gorm"
-	//_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/nikvas0/dc-homework/objects"
 )
 
@@ -56,9 +56,14 @@ func GetProductById(product *objects.Product, id uint32) error {
 	return checkAndLogError(db.First(product, id))
 }
 
-func GetProductsPage(products *[]objects.Product, offset uint32, limit uint64) error {
-
-	return checkAndLogError(db.Order("name").Offset(offset).Limit(limit).Find(products))
+func GetProductsPage(products *[]objects.Product, offset uint32, limit uint32) error {
+	err := db.Order("id").Offset(offset).Limit(limit).Find(products).Error
+	if err != nil && gorm.IsRecordNotFoundError(err) {
+		return errorNotFound
+	} else if err != nil {
+		log.Printf("Storage error: %v.", err)
+	}
+	return err
 }
 
 func DeleteProductById(id uint32) error {

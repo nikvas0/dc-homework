@@ -21,7 +21,7 @@ func main() {
 
 	router.HandleFunc("/product", handlers.CreateProduct).Methods("POST")
 	router.HandleFunc("/product/{id:[0-9]+}", handlers.DeleteProduct).Methods("DELETE")
-	router.HandleFunc("/products", handlers.GetProducts).Methods("GET") // TODO: offset=&limit=
+	router.HandleFunc("/products", handlers.GetProducts).Methods("GET").Queries("offset", "{offset:[0-9]+}", "limit", "{limit:[0-9]+}")
 	router.HandleFunc("/product/{id:[0-9]+}", handlers.GetProduct).Methods("GET")
 	router.HandleFunc("/product", handlers.UpdateProduct).Methods("PUT")
 

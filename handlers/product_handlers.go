@@ -44,7 +44,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		log.Println("Create product request error: Encoded broken JSON.")
 		return
 	}
-	log.Println("Create product request: success.")
+	log.Println("Create product request: success (id=%d).", product.ID)
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
@@ -68,11 +68,49 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Println("Delete product request: success.")
+	log.Printf("Delete product request: success (id=%d).", id)
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotImplemented)
+	vars := mux.Vars(r)
+	var offset uint32
+	var limit uint32
+
+	parseUint := func(value *uint32, name string) error {
+		value_parsed, err := strconv.ParseUint(vars[name], 10, 32)
+		if err != nil {
+			log.Println("Get products request error: %s must be an integer.", name)
+			return err
+		}
+		*value = uint32(value_parsed)
+		return nil
+	}
+	if parseUint(&offset, "offset") != nil || parseUint(&limit, "limit") != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if limit > 100 {
+		limit = 100
+	}
+
+	var products []objects.Product
+	err := storage.GetProductsPage(&products, offset, limit)
+	if err != nil && !storage.IsNotFoundError(err) {
+		log.Println("Get product request error: Failed to parse id.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json;")
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(products)
+	if err != nil {
+		log.Println("Get products request error: Encoded broken JSON.")
+		return
+	}
+
+	log.Printf("Get products request: success (offset=%d, limit=%d, got=%d).", offset, limit, len(products))
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +140,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		log.Println("Get product request error: Encoded broken JSON.")
 		return
 	}
-	log.Println("Get product request: success.")
+	log.Printf("Get product request: success (id=%d).", id)
 }
 
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
@@ -140,5 +178,5 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		log.Println("Update product request error: Encoded broken JSON.")
 		return
 	}
-	log.Println("Update product request: success.")
+	log.Printf("Update product request: success (id=%d).", product.ID)
 }
