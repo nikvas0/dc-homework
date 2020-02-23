@@ -7,10 +7,9 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/nikvas0/dc-homework/objects"
+	"github.com/nikvas0/dc-homework/server/objects"
 )
 
-// Singleton
 var db *gorm.DB
 
 var errorNotFound = errors.New("not found")
@@ -58,6 +57,16 @@ func GetProductById(product *objects.Product, id uint32) error {
 
 func GetProductsPage(products *[]objects.Product, offset uint32, limit uint32) error {
 	err := db.Order("id").Offset(offset).Limit(limit).Find(products).Error
+	if err != nil && gorm.IsRecordNotFoundError(err) {
+		return errorNotFound
+	} else if err != nil {
+		log.Printf("Storage error: %v.", err)
+	}
+	return err
+}
+
+func GetAllProducts(products *[]objects.Product) error {
+	err := db.Order("id").Find(products).Error
 	if err != nil && gorm.IsRecordNotFoundError(err) {
 		return errorNotFound
 	} else if err != nil {

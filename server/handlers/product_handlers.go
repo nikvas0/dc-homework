@@ -9,9 +9,11 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/objects"
-	"github.com/nikvas0/dc-homework/storage"
+	"github.com/nikvas0/dc-homework/server/objects"
+	"github.com/nikvas0/dc-homework/server/storage"
 )
+
+const productsPageLimit = 100
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	reqBody, err := ioutil.ReadAll(r.Body)
@@ -71,7 +73,27 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Delete product request: success (id=%d).", id)
 }
 
-func GetProducts(w http.ResponseWriter, r *http.Request) {
+func GetAllProducts(w http.ResponseWriter, r *http.Request) {
+	var products []objects.Product
+	err := storage.GetAllProducts(&products)
+	if err != nil && !storage.IsNotFoundError(err) {
+		log.Println("Get product request error: Failed to parse id.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json;")
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(products)
+	if err != nil {
+		log.Println("Get products request error: Encoded broken JSON.")
+		return
+	}
+
+	log.Printf("Get products request: success (got=%d).", len(products))
+}
+
+func GetProductsPage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var offset uint32
 	var limit uint32
@@ -90,8 +112,8 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if limit > 100 {
-		limit = 100
+	if limit > productsPageLimit {
+		limit = productsPageLimit
 	}
 
 	var products []objects.Product
