@@ -46,7 +46,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		log.Println("Create product request error: Encoded broken JSON.")
 		return
 	}
-	log.Println("Create product request: success (id=%d).", product.ID)
+	log.Printf("Create product request: success (id=%d).", product.ID)
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
