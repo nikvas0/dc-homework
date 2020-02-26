@@ -3,11 +3,15 @@ package storage
 import (
 	"errors"
 	"log"
+	"time"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/nikvas0/dc-homework/server/objects"
+	"github.com/nikvas0/gorm"
+	_ "github.com/nikvas0/gorm/dialects/postgres"
 )
+
+const connectRetries = 10
+const sleepBetweenConnectRetriesDuration = 2 * time.Second
 
 var db *gorm.DB
 
@@ -18,17 +22,30 @@ func Init(database string, source string) error {
 		return nil
 	}
 
-	db_local, err := gorm.Open(database, source)
+	var dbLocal *gorm.DB
+	var err error
+	counter := 0
+	for {
+		dbLocal, err = gorm.Open(database, source)
+		if err != nil {
+			counter++
+			if counter == connectRetries {
+				return err
+			}
+			log.Printf("Failed to connect to database: %v. Retrying...", err)
+			time.Sleep(sleepBetweenConnectRetriesDuration)
+		} else {
+			break
+		}
+	}
+	log.Println("Connected to database")
+
+	err = dbLocal.AutoMigrate(&objects.Product{}).Error
 	if err != nil {
 		return err
 	}
 
-	err = db_local.AutoMigrate(&objects.Product{}).Error
-	if err != nil {
-		return err
-	}
-
-	db = db_local
+	db = dbLocal
 
 	db.LogMode(true)
 

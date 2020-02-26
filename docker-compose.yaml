@@ -21,7 +21,6 @@ services:
       DB_PASSWORD: 123
       DB_HOST: db
       DB_SSLMODE: disable
-    command: ["/tools/wait.sh", "db:5432", "--", "/go/bin/shop_server"]
     ports:
       - 8080:8080
     networks:

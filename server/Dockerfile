@@ -9,8 +9,6 @@ RUN GOOS=linux go build -o /go/bin/shop_server
 
 FROM golang:latest
 COPY --from=builder /go/bin/shop_server /go/bin/shop_server
-COPY ./tools/wait.sh /tools/wait.sh
-RUN chmod 777 /tools/wait.sh
 
 EXPOSE 8080
 ENTRYPOINT ["/go/bin/shop_server"]
