@@ -4,6 +4,8 @@
 Код сервиса и Dockerfile в директории server.
 
 
+![Архитектура](https://github.com/nikvas0/dc-homework/dc_arch_1.jpg "Архитектура")
+
 
 ## Запуск
 ```
