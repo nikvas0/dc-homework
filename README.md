@@ -13,6 +13,7 @@ docker-compose build && docker-compose up
 ## API
 
 Запросы для postman с тестами находятся в api/shop_test.postman_collection.json
+Для тестов нужна пустая база, надо выполнить `docker-compose rm` перед стартом.
 
 Запросы
 
