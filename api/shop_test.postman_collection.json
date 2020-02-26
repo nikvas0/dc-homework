@@ -1,0 +1,601 @@
+{
+	"info": {
+		"_postman_id": "1ad72eac-1ad5-4614-9286-2d86797f85ed",
+		"name": "shop_test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef2721c1-7a30-4552-a40f-da5ec898505e",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"product1\");",
+							"    pm.expect(jsonData.Category).to.eql(10);",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"product1\", \"category\": 10}"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create product (bad product)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6a7d02b3-c390-4114-8809-1771144019e5",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c07df7b7-2910-49f6-9806-7e0d4429e37f",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"product1\" }"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create product 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90780fdf-0739-477c-80bb-771b7bdb33a8",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"product2\");",
+							"    pm.expect(jsonData.Category).to.eql(10);",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"product2\", \"category\": 10 }"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create product 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a1d0f48b-4656-4b63-b673-26df84012df6",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"product3\");",
+							"    pm.expect(jsonData.Category).to.eql(15);",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"product3\", \"category\": 15 }"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create product 4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "76989b75-fb8c-4055-8e8c-d8c28702e618",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"product4\");",
+							"    pm.expect(jsonData.Category).to.eql(1);",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"product4\", \"category\": 1 }"
+				},
+				"url": {
+					"raw": "localhost:8080/v2/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v2",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create product 5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1a22104-35c7-43ea-83c9-c14af3456dfa",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"product5\");",
+							"    pm.expect(jsonData.Category).to.eql(5);",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"product5\", \"category\": 5 }"
+				},
+				"url": {
+					"raw": "localhost:8080/v2/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v2",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get product 4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7a5d0b72-d537-43bb-8476-651fb48c5045",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"product4\");",
+							"    pm.expect(jsonData.Category).to.eql(1);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v1/product/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all products (v1 only)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4cc44ea9-d273-40fb-a644-d75c6ed1dabe",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(5);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v1/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get products with paging (v2 only)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "53c599be-1ab1-4d06-8e19-58fba7b65fe9",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(2);",
+							"    pm.expect(jsonData[0].ID).to.eql(3);",
+							"    pm.expect(jsonData[1].ID).to.eql(4);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v2/products?offset=2&limit=2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v2",
+						"products"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete product 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "74af04be-4762-4e8d-9ea8-2cbe4f05967e",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v1/product/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete unknown product ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1fff7b1-b750-48e9-b746-d88033638fa8",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v1/product/100000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product",
+						"100000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b7cd957c-1659-4ada-b17b-a0ad3084dd67",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.ID).to.eql(1);",
+							"    pm.expect(jsonData.Name).to.eql(\"new product\");",
+							"    pm.expect(jsonData.Category).to.eql(9999);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": 1, \"name\": \"new product\", \"category\": 9999}"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update product (bad product)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "25389422-5319-436e-80a0-ecdee63efe86",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": 1, \"name\": \"new product\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update product (unknown product)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "82fd2b95-1e4c-4bbd-91f4-2ee1e22e9b24",
+						"exec": [
+							"pm.test(\"test\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": 100000, \"name\": \"new product\", \"category\": 9999}"
+				},
+				"url": {
+					"raw": "localhost:8080/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
