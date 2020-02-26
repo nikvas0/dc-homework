@@ -4,7 +4,7 @@
 Код сервиса и Dockerfile в директории server.
 
 
-![dc_arch_1](https://github.com/nikvas0/dc-homework/dc_arch_1.jpg)
+![архитектура](dc_arch_1.jpg)
 
 
 ## Запуск
