@@ -38,7 +38,7 @@ func Init(database string, source string) error {
 			break
 		}
 	}
-	log.Println("Connected to database")
+	log.Println("Connected to database.")
 
 	err = dbLocal.AutoMigrate(&objects.Product{}).Error
 	if err != nil {
