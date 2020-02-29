@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: user
+      POSTGRES_DB: shop
+    networks:
+      - shop_net
+
+
+  shop_server:
+    build: server/
+    environment:
+      DB_PORT: 5432
+      DB_NAME: shop
+      DB_USER: user
+      DB_PASSWORD: 123
+      DB_HOST: db
+      DB_SSLMODE: disable
+    ports:
+      - 8080:8080
+    networks:
+      - shop_net
+
+networks:
+    shop_net:
