@@ -23,3 +23,8 @@ func FixProduct(product *Product) error {
 
 	return nil
 }
+
+type UserData struct {
+	ID    uint32
+	Email string
+}
