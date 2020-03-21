@@ -38,7 +38,7 @@ func GetAuthMiddleware() func(http.Handler) http.Handler {
 				return
 			}
 
-			req, err := http.NewRequest("POST", "http://auth:8081/v1/validate", bytes.NewBuffer(body))
+			req, err := http.NewRequest("POST", "http://auth:8080/v1/validate", bytes.NewBuffer(body))
 			if err != nil {
 				log.Println("Auth middleware error: failed to create request.")
 				w.WriteHeader(http.StatusUnauthorized)

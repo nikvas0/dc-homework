@@ -12,6 +12,7 @@ import (
 	"github.com/nikvas0/dc-homework/auth/objects"
 	"github.com/nikvas0/dc-homework/auth/storage"
 	"github.com/nikvas0/dc-homework/auth/utils"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const refreshExpirationTime = 7 * 24 * time.Hour
@@ -34,7 +35,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	user := objects.User{}
 	user.Email = userData.Email
-	user.PasswordHash = userData.Password
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
+	user.PasswordHash = string(hashedPassword)
 
 	err = storage.CreateUser(&user)
 	if storage.IsErrorAlreadyExists(err) {
@@ -80,7 +82,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Email != userData.Email || user.PasswordHash != userData.Password {
+	if user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(userData.Password)) != nil {
 		log.Println("SignIn request error: Wrong email or password")
 		w.WriteHeader(http.StatusForbidden)
 		return

@@ -10,5 +10,5 @@ RUN GOOS=linux go build -o /go/bin/auth
 FROM golang:latest
 COPY --from=builder /go/bin/auth /go/bin/auth
 
-EXPOSE 8081
+EXPOSE 8080
 ENTRYPOINT ["/go/bin/auth"]

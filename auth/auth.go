@@ -26,5 +26,5 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	routes.InitRoutes(router)
 
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
