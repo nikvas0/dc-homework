@@ -15,6 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const salt = "salt"
 const refreshExpirationTime = 7 * 24 * time.Hour
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +36,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	user := objects.User{}
 	user.Email = userData.Email
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password+salt), bcrypt.DefaultCost)
 	user.PasswordHash = string(hashedPassword)
 
 	err = storage.CreateUser(&user)
@@ -82,7 +83,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(userData.Password)) != nil {
+	if user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(userData.Password+salt)) != nil {
 		log.Println("SignIn request error: Wrong email or password")
 		w.WriteHeader(http.StatusForbidden)
 		return
