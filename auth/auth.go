@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/nikvas0/dc-homework/auth/queues"
 	"github.com/nikvas0/dc-homework/auth/routes"
 	"github.com/nikvas0/dc-homework/auth/storage"
 )
@@ -22,6 +23,12 @@ func main() {
 		log.Panicf("Error: %v", err)
 	}
 	defer storage.Close()
+
+	err = queues.Init("amqp://guest:guest@rabbitmq:5672/")
+	if err != nil {
+		log.Panicf("Error: %v", err)
+	}
+	defer queues.Close()
 
 	router := mux.NewRouter().StrictSlash(true)
 	routes.InitRoutes(router)

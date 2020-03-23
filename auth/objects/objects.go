@@ -10,6 +10,7 @@ type User struct {
 	ID           uint32 `gorm:"primary_key"`
 	Email        string `gorm:"unique_index:email"`
 	PasswordHash string
+	Confirmed    bool
 }
 
 type UserData struct {
@@ -28,4 +29,15 @@ type Token struct {
 	UserID uint32
 	Email  string
 	jwt.StandardClaims
+}
+
+type ConfirmationToken struct {
+	UserID uint32 `gorm:"primary_key"`
+	Token  string `gorm:"unique_index:ctokenindex"`
+	jwt.StandardClaims
+}
+
+type Notification struct {
+	Email string
+	Text  string
 }

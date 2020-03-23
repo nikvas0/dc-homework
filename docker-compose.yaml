@@ -14,6 +14,14 @@ services:
       - shop_net
 
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+    networks:
+      - shop_net
+
+
   shop_server:
     build: server/
     environment:
@@ -39,6 +47,7 @@ services:
       DB_HOST: db
       DB_SSLMODE: disable
       ACCESS_TOKEN_KEY: 123
+      CONFIRM_TOKEN_KEY: 321
     ports:
       - 8082:8080
     networks:

@@ -10,13 +10,14 @@ import (
 )
 
 const accessExpirationTime = 15 * time.Minute
+const confirmExpirationTime = 24 * time.Hour
 
 func GenerateTokens(user *objects.User) (string, string, error) {
 	token := objects.Token{}
 	token.UserID = user.ID
 	token.Email = user.Email
 	token.ExpiresAt = time.Now().Add(accessExpirationTime).Unix()
-	token.Issuer = "auth"
+	token.Issuer = "auth-access"
 
 	accessToken, err := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), token).SignedString([]byte(os.Getenv("ACCESS_TOKEN_KEY")))
 	if err != nil {
@@ -29,4 +30,13 @@ func GenerateTokens(user *objects.User) (string, string, error) {
 	}
 
 	return accessToken, refreshToken.String(), nil
+}
+
+func GenerateConfirmToken() (string, error) {
+	token, err := uuid.NewRandom()
+	if err != nil {
+		return "", err
+	}
+
+	return token.String(), nil
 }

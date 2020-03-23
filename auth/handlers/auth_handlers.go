@@ -10,6 +10,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/nikvas0/dc-homework/auth/objects"
+	"github.com/nikvas0/dc-homework/auth/queues"
 	"github.com/nikvas0/dc-homework/auth/storage"
 	"github.com/nikvas0/dc-homework/auth/utils"
 	"golang.org/x/crypto/bcrypt"
@@ -38,7 +39,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	user.Email = userData.Email
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password+salt), bcrypt.DefaultCost)
 	user.PasswordHash = string(hashedPassword)
-
+	user.Confirmed = false
 	err = storage.CreateUser(&user)
 	if storage.IsErrorAlreadyExists(err) {
 		log.Println("SignUp request error: already exists.")
@@ -50,9 +51,52 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	confirmToken, err := utils.GenerateConfirmToken()
+	if err != nil {
+		log.Println("SignUp request error: failed to generate token.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = storage.CreateConfirmationToken(&user, confirmToken)
+	if err != nil {
+		log.Println("SignUp error: Failed to create confirmation token.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = queues.SheduleConfirmation(&user, confirmToken)
+	if err != nil {
+		log.Println("SignUp error: Failed to put request to queue.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json;")
 	w.WriteHeader(http.StatusCreated)
 	log.Printf("SignUp request: success (id=%d).", user.ID)
+}
+
+func Confirm(w http.ResponseWriter, r *http.Request) {
+	token := r.URL.String()[12:]
+	var userID uint32
+	err := storage.GetUserIDByConfirmationToken(token, &userID)
+	if err != nil {
+		log.Println("Confirm error: Failed to find userID by token.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = storage.SetUserConfirmedByID(userID)
+	if err != nil {
+		log.Println("Confirm error: Failed to find user by id.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("Confirmed user %d", userID)
+	w.WriteHeader(http.StatusOK)
+	return
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +127,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(userData.Password+salt)) != nil {
+	if !user.Confirmed || user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(userData.Password+salt)) != nil {
 		log.Println("SignIn request error: Wrong email or password")
 		w.WriteHeader(http.StatusForbidden)
 		return
