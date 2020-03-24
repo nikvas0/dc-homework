@@ -5,10 +5,9 @@ WORKDIR /go/src/github.com/nikvas0/dc-homework/notifications
 COPY . .
 
 RUN go get -d -v
-RUN GOOS=linux go build -o /go/bin/notify
+RUN GOOS=linux go build -o /go/bin/notifications
 
 FROM golang:latest
-COPY --from=builder /go/bin/notify /go/bin/notify
+COPY --from=builder /go/bin/notifications /go/bin/notifications
 
-EXPOSE 8080
-ENTRYPOINT ["/go/bin/notify"]
+CMD ["/go/bin/notifications"]

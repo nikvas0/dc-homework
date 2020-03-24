@@ -36,7 +36,6 @@ services:
     networks:
       - shop_net
 
-
   auth:
     build: auth/
     environment:
@@ -48,8 +47,25 @@ services:
       DB_SSLMODE: disable
       ACCESS_TOKEN_KEY: 123
       CONFIRM_TOKEN_KEY: 321
+      RABBITMQ: amqp://guest:guest@rabbitmq:5672/
     ports:
       - 8082:8080
+    networks:
+      - shop_net
+  
+
+  notifications:
+    build: notifications/
+    environment:
+      RABBITMQ: amqp://guest:guest@rabbitmq:5672/
+      SMTP_SERVER: mock
+      FROM_EMAIL: test@mock
+      PASSWORD: 1
+    networks:
+      - shop_net
+
+  mock:
+    build: mock/
     networks:
       - shop_net
 

@@ -24,7 +24,7 @@ func main() {
 	}
 	defer storage.Close()
 
-	err = queues.Init("amqp://guest:guest@rabbitmq:5672/")
+	err = queues.Init(os.Getenv("RABBITMQ"))
 	if err != nil {
 		log.Panicf("Error: %v", err)
 	}
