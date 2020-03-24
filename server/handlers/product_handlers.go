@@ -127,10 +127,19 @@ func GetProductsPage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	total, err := storage.GetProductsCount()
+	if err != nil {
+		log.Println("Get product request error: Failed to get total.")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json;")
 	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(products)
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"total": total,
+		"items": products,
+	})
 	if err != nil {
 		log.Println("Get products request error: Encoded broken JSON.")
 		return

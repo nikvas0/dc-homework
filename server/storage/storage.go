@@ -81,6 +81,12 @@ func GetProductsPage(products *[]objects.Product, offset uint32, limit uint32) e
 	return err
 }
 
+func GetProductsCount() (uint32, error) {
+	var count uint32
+	err := db.Model(objects.Product{}).Count(&count).Error
+	return count, err
+}
+
 func GetAllProducts(products *[]objects.Product) error {
 	err := db.Order("id").Find(products).Error
 	if err != nil && gorm.IsRecordNotFoundError(err) {
