@@ -58,9 +58,9 @@ func main() {
 
 	q, err := ch.QueueDeclare(
 		"emails", // name
-		true,     // durable -- в данном примере не требуется
+		false,    // durable -- в данном примере не требуется
 		false,    // delete when unused
-		true,     // exclusive
+		false,    // exclusive
 		false,    // no-wait
 		nil,      // arguments
 	)

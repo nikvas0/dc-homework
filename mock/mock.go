@@ -54,6 +54,10 @@ func main() {
 		log.Printf("mock msg: %s", msg)
 		email = strings.Split(strings.Split(msg, "<")[1], ">")[0]
 		log.Printf("mock email: %s", email)
+		if email[0:4] == "fail" {
+			log.Println("Fail mock email")
+			conn.Close()
+		}
 
 		conn.Write([]byte("250 " + email + " ok\n"))
 
