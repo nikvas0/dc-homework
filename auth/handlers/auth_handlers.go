@@ -95,6 +95,7 @@ func Confirm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Confirmed user %d", userID)
+	//http.Redirect(w, r, "http://localhost", http.StatusFound)
 	w.WriteHeader(http.StatusOK)
 	return
 }

@@ -64,7 +64,7 @@ func Close() {
 }
 
 func SheduleConfirmation(user *objects.User, token string) error {
-	notification := objects.Notification{Email: user.Email, Text: "go to http://localhost:8082/confirm/" + token}
+	notification := objects.Notification{Email: user.Email, Text: "go to http://localhost:8082/v1/confirm/" + token}
 	body, err := json.Marshal(notification)
 	if err != nil {
 		log.Println("json marshal failed")
