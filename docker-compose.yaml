@@ -36,6 +36,7 @@ services:
     networks:
       - shop_net
 
+
   auth:
     build: auth/
     environment:
@@ -63,6 +64,7 @@ services:
       PASSWORD: 1
     networks:
       - shop_net
+
 
   mock:
     build: mock/
