@@ -14,6 +14,14 @@ services:
       - shop_net
 
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+    networks:
+      - shop_net
+
+
   shop_server:
     build: server/
     environment:
@@ -39,8 +47,27 @@ services:
       DB_HOST: db
       DB_SSLMODE: disable
       ACCESS_TOKEN_KEY: 123
+      CONFIRM_TOKEN_KEY: 321
+      RABBITMQ: amqp://guest:guest@rabbitmq:5672/
     ports:
       - 8082:8080
+    networks:
+      - shop_net
+  
+
+  notifications:
+    build: notifications/
+    environment:
+      RABBITMQ: amqp://guest:guest@rabbitmq:5672/
+      SMTP_SERVER: mock
+      FROM_EMAIL: test@mock
+      PASSWORD: 1
+    networks:
+      - shop_net
+
+
+  mock:
+    build: mock/
     networks:
       - shop_net
 

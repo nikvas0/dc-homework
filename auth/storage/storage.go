@@ -51,6 +51,11 @@ func Init(database string, source string) error {
 		return err
 	}
 
+	err = dbLocal.AutoMigrate(&objects.ConfirmationToken{}).Error
+	if err != nil {
+		return err
+	}
+
 	db = dbLocal
 
 	db.LogMode(true)
@@ -77,7 +82,7 @@ func CreateUser(user *objects.User) error {
 	connection := db.Where("email = ?", user.Email).First(user)
 	if connection.Error != nil {
 		log.Printf("Storage error: %v.", connection.Error)
-	} else if connection.RowsAffected != 0 {
+	} else if connection.RowsAffected != 0 && !user.Confirmed {
 		return errorAlreadyExists
 	}
 	connection = db.Create(user)
@@ -87,12 +92,38 @@ func CreateUser(user *objects.User) error {
 	return connection.Error
 }
 
+func CreateConfirmationToken(user *objects.User, token string) error {
+	return checkAndLogError(db.Create(&objects.ConfirmationToken{UserID: user.ID, Token: token}))
+}
+
+func GetConfirmationToken(user *objects.User, token *string) error {
+	obj := objects.ConfirmationToken{}
+	err := checkAndLogError(db.First(obj, user.ID))
+	token = &obj.Token
+	return err
+}
+
+func DeleteConfirmationToken(user *objects.User) error {
+	return checkAndLogError(db.Delete(&objects.ConfirmationToken{UserID: user.ID}))
+}
+
 func GetUserByEmail(email string, user *objects.User) error {
 	return checkAndLogError(db.Where("email = ?", email).First(user))
 }
 
 func GetUserByID(id uint32, user *objects.User) error {
 	return checkAndLogError(db.First(user, id))
+}
+
+func GetUserIDByConfirmationToken(token string, id *uint32) error {
+	res := objects.ConfirmationToken{}
+	err := checkAndLogError(db.Where("token = ?", token).First(&res))
+	*id = res.UserID
+	return err
+}
+
+func SetUserConfirmedByID(id uint32) error {
+	return checkAndLogError(db.Model(&objects.User{}).Where("id = ?", id).Update("confirmed", true))
 }
 
 func CreateSession(session *objects.Session) error {
