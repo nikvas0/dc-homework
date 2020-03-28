@@ -7,9 +7,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/server/middleware"
-	"github.com/nikvas0/dc-homework/server/routes"
-	"github.com/nikvas0/dc-homework/server/storage"
+	"github.com/nikvas0/dc-homework/auth/routes"
+	"github.com/nikvas0/dc-homework/auth/storage"
 )
 
 func main() {
@@ -25,7 +24,6 @@ func main() {
 	defer storage.Close()
 
 	router := mux.NewRouter().StrictSlash(true)
-	middleware.InitMiddleware(router)
 	routes.InitRoutes(router)
 
 	log.Fatal(http.ListenAndServe(":8080", router))

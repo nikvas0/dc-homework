@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_USER: user
       POSTGRES_DB: shop
+    ports:
+      - 5431:5432
     networks:
       - shop_net
 
@@ -22,7 +24,23 @@ services:
       DB_HOST: db
       DB_SSLMODE: disable
     ports:
-      - 8080:8080
+      - 8081:8080
+    networks:
+      - shop_net
+
+
+  auth:
+    build: auth/
+    environment:
+      DB_PORT: 5432
+      DB_NAME: shop
+      DB_USER: user
+      DB_PASSWORD: 123
+      DB_HOST: db
+      DB_SSLMODE: disable
+      ACCESS_TOKEN_KEY: 123
+    ports:
+      - 8082:8080
     networks:
       - shop_net
 

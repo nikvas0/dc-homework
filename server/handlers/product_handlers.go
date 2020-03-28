@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -28,14 +27,12 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Create product request error: Got broken JSON.")
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Broken JSON.")
 		return
 	}
 	err = objects.FixProduct(&product)
 	if err != nil {
 		log.Println("Create product request error: Got broken product.", err)
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Bad product.")
 		return
 	}
 
@@ -185,14 +182,12 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Update product request error: Got broken JSON.")
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Broken JSON.")
 		return
 	}
 	err = objects.FixProduct(&product)
 	if err != nil {
 		log.Println("Update product request error: Got broken product.", err)
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Bad product.")
 		return
 	}
 
