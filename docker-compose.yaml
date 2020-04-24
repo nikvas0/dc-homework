@@ -65,6 +65,14 @@ services:
     networks:
       - shop_net
 
+  product_upload:
+    build: product_upload/
+    environment:
+      RABBITMQ: amqp://guest:guest@rabbitmq:5672/
+    ports:
+        - 8083:8080
+    networks:
+      - shop_net
 
   mock:
     build: mock/
