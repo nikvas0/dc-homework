@@ -16,6 +16,7 @@ func GenerateTokens(user *objects.User) (string, string, error) {
 	token := objects.Token{}
 	token.UserID = user.ID
 	token.Email = user.Email
+	token.Role = user.Role
 	token.ExpiresAt = time.Now().Add(accessExpirationTime).Unix()
 	token.Issuer = "auth-access"
 

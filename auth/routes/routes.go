@@ -11,6 +11,8 @@ func InitRoutesCommon(router *mux.Router) {
 	router.HandleFunc("/validate", handlers.Validate).Methods("POST")
 	router.HandleFunc("/refresh", handlers.Refresh).Methods("POST")
 	router.HandleFunc("/confirm/{token}", handlers.Confirm).Methods("GET")
+
+	router.HandleFunc("/role", handlers.UpdateRole).Methods("PUT")
 }
 
 func InitRoutesV1(router *mux.Router) {

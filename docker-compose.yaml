@@ -46,6 +46,7 @@ services:
       DB_PASSWORD: 123
       DB_HOST: db
       DB_SSLMODE: disable
+      GRPC_PORT: :50051
       ACCESS_TOKEN_KEY: 123
       CONFIRM_TOKEN_KEY: 321
       RABBITMQ: amqp://guest:guest@rabbitmq:5672/
@@ -65,6 +66,7 @@ services:
     networks:
       - shop_net
 
+
   product_upload:
     build: product_upload/
     environment:
@@ -73,6 +75,20 @@ services:
         - 8083:8080
     networks:
       - shop_net
+  
+  product_upload_inserter:
+    build: product_upload_inserter/
+    environment:
+      DB_PORT: 5432
+      DB_NAME: shop
+      DB_USER: user
+      DB_PASSWORD: 123
+      DB_HOST: db
+      DB_SSLMODE: disable
+      RABBITMQ: amqp://guest:guest@rabbitmq:5672/
+    networks:
+      - shop_net
+
 
   mock:
     build: mock/

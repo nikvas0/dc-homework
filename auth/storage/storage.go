@@ -122,6 +122,10 @@ func GetUserIDByConfirmationToken(token string, id *uint32) error {
 	return err
 }
 
+func UpdateUserRoleByID(id uint32, role uint32) error {
+	return checkAndLogError(db.Model(&objects.User{}).Where("id = ?", id).Update("role", role))
+}
+
 func SetUserConfirmedByID(id uint32) error {
 	return checkAndLogError(db.Model(&objects.User{}).Where("id = ?", id).Update("confirmed", true))
 }

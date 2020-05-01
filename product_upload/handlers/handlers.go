@@ -40,6 +40,12 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+		err = objects.FixProduct(&product)
+		if err != nil {
+			log.Printf("bad product: %v", err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		products = append(products, product)
 
 		if len(products) == 100 {

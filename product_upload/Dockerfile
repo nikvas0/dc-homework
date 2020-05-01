@@ -5,10 +5,10 @@ WORKDIR /go/src/github.com/nikvas0/dc-homework/product_upload
 COPY . .
 
 RUN go get -d -v
-RUN GOOS=linux go build -o /go/bin/auth
+RUN GOOS=linux go build -o /go/bin/product_upload
 
 FROM golang:latest
-COPY --from=builder /go/bin/auth /go/bin/auth
+COPY --from=builder /go/bin/product_upload /go/bin/product_upload
 
 EXPOSE 8080
-ENTRYPOINT ["/go/bin/auth"]
+ENTRYPOINT ["/go/bin/product_upload"]
