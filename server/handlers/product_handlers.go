@@ -7,14 +7,20 @@ import (
 	"net/http"
 	"strconv"
 
+	"server/objects"
+	"server/storage"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/server/objects"
-	"github.com/nikvas0/dc-homework/server/storage"
 )
 
 const productsPageLimit = 100
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("role").(uint32) != 1 {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Create product request error: Error while reading request")
@@ -54,6 +60,11 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("role").(uint32) != 1 {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	vars := mux.Vars(r)
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -179,6 +190,11 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("role").(uint32) != 1 {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Update product request error: Error while reading request")

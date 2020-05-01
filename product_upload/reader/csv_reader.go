@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nikvas0/dc-homework/product_upload/objects"
+	"product_upload/objects"
 )
 
 func ReadProduct(s string) (objects.Product, error) {

@@ -1,10 +1,14 @@
 # Based on https://ergoz.ru/create-the-smallest-and-secured-golang-docker-image-based-on-scratch/
 FROM golang:latest AS builder
 
-WORKDIR /go/src/github.com/nikvas0/dc-homework/auth
-COPY . .
+WORKDIR /src/dc-homework/
+COPY auth/go.mod .
+COPY auth/go.sum .
+COPY lib/ ../lib/
+RUN go mod download
 
-RUN go get -d -v
+COPY auth/ .
+
 RUN GOOS=linux go build -o /go/bin/auth
 
 FROM golang:latest

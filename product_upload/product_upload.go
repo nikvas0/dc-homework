@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"os"
 
+	"product_upload/middleware"
+	"product_upload/queues"
+	"product_upload/routes"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/product_upload/middleware"
-	"github.com/nikvas0/dc-homework/product_upload/queues"
-	"github.com/nikvas0/dc-homework/product_upload/routes"
 )
 
 func main() {

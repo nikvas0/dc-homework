@@ -8,11 +8,12 @@ import (
 	"os"
 	"time"
 
+	"auth/objects"
+	"auth/queues"
+	"auth/storage"
+	"auth/utils"
+
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/nikvas0/dc-homework/auth/objects"
-	"github.com/nikvas0/dc-homework/auth/queues"
-	"github.com/nikvas0/dc-homework/auth/storage"
-	"github.com/nikvas0/dc-homework/auth/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -172,6 +173,11 @@ type UpdateRoleRequest struct {
 }
 
 func UpdateRole(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("role").(objects.Role) != objects.AdminRole {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Update request error: Error while reading request")

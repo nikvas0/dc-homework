@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"os"
 
+	"server/middleware"
+	"server/routes"
+	"server/storage"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/server/middleware"
-	"github.com/nikvas0/dc-homework/server/routes"
-	"github.com/nikvas0/dc-homework/server/storage"
 )
 
 func main() {

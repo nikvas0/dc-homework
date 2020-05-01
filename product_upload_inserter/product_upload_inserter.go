@@ -7,8 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/nikvas0/dc-homework/product_upload_inserter/objects"
-	"github.com/nikvas0/dc-homework/product_upload_inserter/storage"
+	"product_upload_inserter/objects"
+	"product_upload_inserter/storage"
+
 	"github.com/streadway/amqp"
 )
 

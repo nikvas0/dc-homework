@@ -5,9 +5,11 @@ import (
 	"log"
 	"time"
 
-	"github.com/nikvas0/dc-homework/auth/objects"
-	"github.com/nikvas0/gorm"
-	_ "github.com/nikvas0/gorm/dialects/postgres"
+	"auth/objects"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const connectRetries = 10
@@ -59,6 +61,14 @@ func Init(database string, source string) error {
 	db = dbLocal
 
 	db.LogMode(true)
+
+	user := objects.User{}
+	user.Email = "admin"
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("saltadmin"), bcrypt.DefaultCost)
+	user.PasswordHash = string(hashedPassword)
+	user.Confirmed = true
+	user.Role = objects.AdminRole
+	CreateUser(&user) // ignore error
 
 	return nil
 }

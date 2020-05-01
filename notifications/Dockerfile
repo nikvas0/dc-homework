@@ -1,10 +1,14 @@
 # Based on https://ergoz.ru/create-the-smallest-and-secured-golang-docker-image-based-on-scratch/
 FROM golang:latest AS builder
 
-WORKDIR /go/src/github.com/nikvas0/dc-homework/notifications
-COPY . .
+WORKDIR /src/dc-homework/
+COPY notifications/go.mod .
+COPY notifications/go.sum .
+COPY lib/ ../lib/
+RUN go mod download
 
-RUN go get -d -v
+COPY notifications/ .
+
 RUN GOOS=linux go build -o /go/bin/notifications
 
 FROM golang:latest

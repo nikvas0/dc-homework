@@ -5,7 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/nikvas0/dc-homework/auth/objects"
+	"auth/objects"
+
 	"github.com/streadway/amqp"
 )
 

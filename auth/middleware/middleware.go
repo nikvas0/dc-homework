@@ -9,6 +9,8 @@ import (
 
 func InitMiddleware(router *mux.Router) {
 	router.Use(auth_middleware.GetAuthMiddleware(
-		func(r *http.Request) bool { return true }))
+		func(r *http.Request) bool {
+			return r.Method == "PUT"
+		}))
 	return
 }

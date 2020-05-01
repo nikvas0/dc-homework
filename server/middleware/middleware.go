@@ -1,11 +1,14 @@
 package middleware
 
 import (
+	"lib/auth_middleware"
+	"net/http"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/lib/auth_middleware"
 )
 
 func InitMiddleware(router *mux.Router) {
-	router.Use(auth_middleware.GetAuthMiddleware())
+	router.Use(auth_middleware.GetAuthMiddleware(
+		func(r *http.Request) bool { return true }))
 	return
 }

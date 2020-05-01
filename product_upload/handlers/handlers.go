@@ -6,12 +6,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/nikvas0/dc-homework/product_upload/objects"
-	"github.com/nikvas0/dc-homework/product_upload/queues"
-	"github.com/nikvas0/dc-homework/product_upload/reader"
+	"product_upload/objects"
+	"product_upload/queues"
+	"product_upload/reader"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("role").(uint32) != 1 {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	r.ParseMultipartForm(10 << 30)
 	file, header, err := r.FormFile("products_file")
 	if err != nil {

@@ -6,9 +6,10 @@ import (
 	"log"
 	"os"
 
+	"auth/objects"
+	pb "lib/proto/auth"
+
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/nikvas0/dc-homework/auth/objects"
-	pb "github.com/nikvas0/dc-homework/lib/proto/auth"
 )
 
 type AuthServer struct {

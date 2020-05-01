@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"auth/handlers"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/auth/handlers"
 )
 
 func InitRoutesCommon(router *mux.Router) {

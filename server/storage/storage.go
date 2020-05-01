@@ -5,9 +5,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/nikvas0/dc-homework/server/objects"
-	"github.com/nikvas0/gorm"
-	_ "github.com/nikvas0/gorm/dialects/postgres"
+	"server/objects"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 const connectRetries = 10

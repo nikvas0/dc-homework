@@ -4,9 +4,10 @@ import (
 	"os"
 	"time"
 
+	"auth/objects"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
-	"github.com/nikvas0/dc-homework/auth/objects"
 )
 
 const accessExpirationTime = 15 * time.Minute
