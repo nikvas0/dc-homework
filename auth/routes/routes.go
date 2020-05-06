@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"auth/handlers"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/auth/handlers"
 )
 
 func InitRoutesCommon(router *mux.Router) {
@@ -11,6 +12,8 @@ func InitRoutesCommon(router *mux.Router) {
 	router.HandleFunc("/validate", handlers.Validate).Methods("POST")
 	router.HandleFunc("/refresh", handlers.Refresh).Methods("POST")
 	router.HandleFunc("/confirm/{token}", handlers.Confirm).Methods("GET")
+
+	router.HandleFunc("/role", handlers.UpdateRole).Methods("PUT")
 }
 
 func InitRoutesV1(router *mux.Router) {

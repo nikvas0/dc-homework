@@ -6,10 +6,18 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+const (
+	UserRole  uint32 = 0
+	AdminRole uint32 = 1
+)
+
+type Role = uint32
+
 type User struct {
 	ID           uint32 `gorm:"primary_key"`
 	Email        string `gorm:"unique_index:email"`
 	PasswordHash string
+	Role         Role
 	Confirmed    bool
 }
 
@@ -28,6 +36,7 @@ type Session struct {
 type Token struct {
 	UserID uint32
 	Email  string
+	Role   Role
 	jwt.StandardClaims
 }
 

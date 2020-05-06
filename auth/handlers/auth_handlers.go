@@ -8,11 +8,12 @@ import (
 	"os"
 	"time"
 
+	"auth/objects"
+	"auth/queues"
+	"auth/storage"
+	"auth/utils"
+
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/nikvas0/dc-homework/auth/objects"
-	"github.com/nikvas0/dc-homework/auth/queues"
-	"github.com/nikvas0/dc-homework/auth/storage"
-	"github.com/nikvas0/dc-homework/auth/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -37,7 +38,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	user := objects.User{}
 	user.Email = userData.Email
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password+salt), bcrypt.DefaultCost)
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(salt+userData.Password), bcrypt.DefaultCost)
 	user.PasswordHash = string(hashedPassword)
 	user.Confirmed = false
 	err = storage.CreateUser(&user)
@@ -128,7 +129,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !user.Confirmed || user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(userData.Password+salt)) != nil {
+	if !user.Confirmed || user.Email != userData.Email || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(salt+userData.Password)) != nil {
 		log.Println("SignIn request error: Wrong email or password")
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -166,6 +167,52 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	log.Printf("SignIn request: success (id=%d).", session.UserID)
 }
 
+type UpdateRoleRequest struct {
+	User uint32
+	Role string
+}
+
+func UpdateRole(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("role").(objects.Role) != objects.AdminRole {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	reqBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Update request error: Error while reading request")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	updateRequest := UpdateRoleRequest{}
+	err = json.Unmarshal(reqBody, &updateRequest)
+	if err != nil {
+		log.Println("Update request error: Got broken JSON.")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	role := uint32(0)
+	if updateRequest.Role == "user" {
+		role = objects.UserRole
+	} else if updateRequest.Role == "admin" {
+		role = objects.AdminRole
+	} else {
+		log.Println("Update request error: Got bad role.")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = storage.UpdateUserRoleByID(updateRequest.User, role)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 type TokenRequest struct {
 	Token string
 }
@@ -200,6 +247,7 @@ func Validate(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(map[string]interface{}{
 		"id":    token.UserID,
 		"email": token.Email,
+		"role":  token.Role,
 	})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

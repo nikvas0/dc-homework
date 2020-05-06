@@ -3,13 +3,20 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 
+	"auth/queues"
+	"auth/routes"
+	"auth/rpc_server"
+	"auth/storage"
+	pb "lib/proto/auth"
+
+	"auth/middleware"
+
 	"github.com/gorilla/mux"
-	"github.com/nikvas0/dc-homework/auth/queues"
-	"github.com/nikvas0/dc-homework/auth/routes"
-	"github.com/nikvas0/dc-homework/auth/storage"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -31,7 +38,21 @@ func main() {
 	defer queues.Close()
 
 	router := mux.NewRouter().StrictSlash(true)
+	middleware.InitMiddleware(router)
 	routes.InitRoutes(router)
+
+	lis, err := net.Listen("tcp", os.Getenv("GRPC_PORT"))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterAuthServiceServer(s, &rpc_server.AuthServer{})
+
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

@@ -6,7 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nikvas0/dc-homework/notifications/email"
+	"notifications/email"
+
 	"github.com/streadway/amqp"
 )
 

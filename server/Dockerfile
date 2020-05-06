@@ -1,10 +1,14 @@
 # Based on https://ergoz.ru/create-the-smallest-and-secured-golang-docker-image-based-on-scratch/
 FROM golang:latest AS builder
 
-WORKDIR /go/src/github.com/nikvas0/dc-homework/server
-COPY . .
+WORKDIR /src/dc-homework/
+COPY server/go.mod .
+COPY server/go.sum .
+COPY lib/ ../lib/
+RUN go mod download
 
-RUN go get -d -v
+COPY server/ .
+
 RUN GOOS=linux go build -o /go/bin/shop_server
 
 FROM golang:latest
